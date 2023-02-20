@@ -5,12 +5,10 @@ const bcrypt = require('bcrypt');
 const { utilizarCodigo } = require('./codigo.service');
 const { getUserByEmail } = require('./user.service');
 const { User } = require('../db/models/user.model');
-const { config } = require('../config/config');
 const aws = require('aws-sdk');
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
 const s3 = new aws.S3();
-//const fs = require('fs');
 
 const crearPerfil = async (data, file, fileName) => {
     const usuario = await getUserByEmail(data.user.email);
@@ -125,8 +123,7 @@ const updatePerfil = async (id, datos, idtoken, file, fileName) => {
         new_img = file;
         new_img_name = fileName;
         try {
-            let params = { Bucket: process.env.AWS_BUCKET_NAME, Key: perfil.dataValues.foto }
-            console.log('params: ' + params);
+            let params = { Bucket: process.env.AWS_BUCKET_NAME, Key: perfil.dataValues.foto };
             await s3.deleteObject(params).promise();
         } catch(err) {
             console.log(err);

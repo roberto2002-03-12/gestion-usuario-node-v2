@@ -126,7 +126,7 @@ const renewToken = async (sub) => {
         role: roles
     };
 
-    const token = jwt.sign(payload, config.jwtSecret, {expiresIn: '4h'});
+    const token = jwt.sign(payload, config.jwtSecret, {expiresIn: '20min'});
 
     return {
         user,

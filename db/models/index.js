@@ -3,6 +3,9 @@ const { Perfil, PerfilSchema } = require('./perfil.model');
 const { Rol, RolSchema } = require('./rol.model');
 const { UserRol, UserRolSchema } = require('./user-role.model');
 const { CodigoSchema, Codigo } = require('./codigos.model');
+const { DepartamentoSchema, Departamento } = require('./departamento.model');
+const { ProvinciaSchema, Provincia } = require('./provincia.model');
+const { DistritoSchema, Distrito } = require('./distrito.model');
 
 function setupModels(sequelize) {
     User.init(UserSchema, User.config(sequelize));
@@ -10,6 +13,9 @@ function setupModels(sequelize) {
     Rol.init(RolSchema, Rol.config(sequelize));
     UserRol.init(UserRolSchema, UserRol.config(sequelize));
     Codigo.init(CodigoSchema, Codigo.config(sequelize));
+    Departamento.init(DepartamentoSchema, Departamento.config(sequelize));
+    Provincia.init(ProvinciaSchema, Provincia.config(sequelize));
+    Distrito.init(DistritoSchema, Distrito.config(sequelize));
 
     User.associate(sequelize.models);
     Perfil.associate(sequelize.models);
