@@ -43,7 +43,7 @@ class Distrito extends Model {
             tableName: DISTRITO_TABLE,
             modelName: 'Distrito',
             timestamps: false
-        };   
+        };
     };
 };
 
@@ -51,4 +51,4 @@ module.exports = {
     Distrito,
     DISTRITO_TABLE,
     DistritoSchema
-}
+};

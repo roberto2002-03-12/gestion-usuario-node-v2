@@ -22,6 +22,9 @@ function setupModels(sequelize) {
     Rol.associate(sequelize.models);
     UserRol.associate(sequelize.models);
     Codigo.associate(sequelize.models);
+    Departamento.associate(sequelize.models);
+    Provincia.associate(sequelize.models);
+    Distrito.associate(sequelize.models);
 }
 
 module.exports = setupModels;

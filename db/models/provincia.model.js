@@ -27,13 +27,17 @@ const ProvinciaSchema = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
     }
-}
+};
 
 class Provincia extends Model {
     static associate(models) {
         this.belongsTo(models.Departamento, {
-            foreignKey: 'departamentoId',
             as: 'departamento',
+            foreignKey: 'departamentoId'
+        });
+
+        this.hasMany(models.Distrito, {
+            as: 'distrito'
         });
     };
 
@@ -43,7 +47,7 @@ class Provincia extends Model {
             tableName: PROVINCIA_TABLE,
             modelName: 'Provincia',
             timestamps: false
-        }
+        };
     };
 };
 

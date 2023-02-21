@@ -23,12 +23,10 @@ const listarDepartamento = async (query) => {
     const { nombre_departamento } = query || {};
 
     const opcion = {
-        include: [
-            {
-                model: Provincia,
-                as: 'provincia'
-            }
-        ],
+        include: [{
+            model: Provincia,
+            as: 'provincias'
+        }],
         where: {}
     }
 

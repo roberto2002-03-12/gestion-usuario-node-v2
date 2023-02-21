@@ -15,16 +15,15 @@ const DepartamentoSchema = {
         allowNull: false,
         type: DataTypes.STRING(45)
     }
-}
-
+};
+//Provincia
 class Departamento extends Model {
     static associate(models) {
-        //ToDo this has many
         this.hasMany(models.Provincia, {
-            as: 'provincia',
+            as: 'provincias',
             foreignKey: 'departamentoId'
         });
-    }
+    };
 
     static config(sequelize) {
         return {
@@ -32,12 +31,12 @@ class Departamento extends Model {
             tableName: DEPARTAMENTO_TABLE,
             modelName: 'Departamento',
             timestamps: false
-        }
-    }
-}
+        };
+    };
+};
 
 module.exports = {
     Departamento,
     DepartamentoSchema,
     DEPARTAMENTO_TABLE
-}
+};
