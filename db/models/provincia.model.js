@@ -37,7 +37,8 @@ class Provincia extends Model {
         });
 
         this.hasMany(models.Distrito, {
-            as: 'distrito'
+            as: 'distritos',
+            foreignKey: 'provinciaId'
         });
     };
 

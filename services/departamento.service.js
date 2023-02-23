@@ -2,6 +2,7 @@ const boom = require('@hapi/boom');
 const { models } = require('../libs/sequelize');
 const { Op } = require('sequelize');
 const { Provincia } = require('../db/models/provincia.model');
+const { Distrito } = require('../db/models/distrito.model');
 
 const crearDepartamento = async (obj) => {
     const departamento = await models.Departamento.create(obj);
@@ -9,10 +10,23 @@ const crearDepartamento = async (obj) => {
     return departamento;
 };
 
+const seleccionarDepartamento = async (id) => {
+    const departamento = await models.Departamento.findByPk(id, {
+        include: [{
+            model: Provincia,
+            as: 'provincias'
+        }]
+    });
+
+    if (!departamento) throw boom.notFound('Departamento no existe');
+
+    return departamento
+}
+
 const cambiarDepartamento = async (obj, id) => {
     const departamento = await models.Departamento.findByPk(id);
 
-    if (!departamento) throw boom.unauthorized('Departamento no valido');
+    if (!departamento) throw boom.notFound('Departamento no valido');
 
     const respuesta = await departamento.update(obj);
 
@@ -25,7 +39,13 @@ const listarDepartamento = async (query) => {
     const opcion = {
         include: [{
             model: Provincia,
-            as: 'provincias'
+            as: 'provincias',
+            include: [
+                {
+                    model: Distrito,
+                    as: 'distritos'
+                }
+            ]
         }],
         where: {}
     }
@@ -49,10 +69,13 @@ const eliminarDepartamento = async (id) => {
     if (!departamento) throw boom.unauthorized('Departamento no valido');
 
     await departamento.destroy();
+
+    return 'eliminado'
 };
 
 module.exports = {
     eliminarDepartamento,
+    seleccionarDepartamento,
     listarDepartamento,
     cambiarDepartamento,
     crearDepartamento

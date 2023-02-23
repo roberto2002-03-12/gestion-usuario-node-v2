@@ -39,6 +39,7 @@ router.get('/',
 router.patch('/:id',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin', 'manager'),
+    validationHandler(selectDepartamentoSchema, 'params'),
     validationHandler(updateDepartamentoSchema, 'body'),
     async (req, res, next) => {
         try {
