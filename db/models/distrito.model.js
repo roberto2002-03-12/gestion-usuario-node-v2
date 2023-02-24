@@ -35,6 +35,11 @@ class Distrito extends Model {
             as: 'provincia',
             foreignKey: 'provinciaId'
         });
+
+        this.hasMany(models.User, {
+            as: 'distrito',
+            foreignKey: 'distritoId'
+        });
     };
 
     static config(sequelize) {

@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const { models } = require('../libs/sequelize');
 const { Provincia } = require('../db/models/provincia.model');
+const { Departamento } = require('../db/models/departamento.model');
 const boom = require('@hapi/boom');
 
 const listarDistritos = async (query) => {
@@ -31,7 +32,11 @@ const seleccionarDistrito = async (id) => {
     const distrito = await models.Distrito.findByPk(id, {
         include: [{
             model: Provincia,
-            as: 'provincia'
+            as: 'provincia',
+            include: [{
+                model: Departamento,
+                as: 'departamento'
+            }]
         }]
     });
 

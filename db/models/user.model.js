@@ -22,10 +22,6 @@ const UserSchema = {
         allowNull: true,
         type: DataTypes.STRING,
     },
-    token: {
-        allowNull: true,
-        type: DataTypes.STRING,
-    },
     createdAt: {
         allowNull: false,
         field: 'created_at',

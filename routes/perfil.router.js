@@ -2,7 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const validatorHandler = require('../middlewares/validator.handler');
 const { checkRole } = require('../middlewares/auth.handler');
-const { createProfileSchema, getProfileSchema } = require('../schemas/perfil.schema');
+const { createProfileSchema, getProfileSchema, updateProfileSchema } = require('../schemas/perfil.schema');
 const { crearPerfil, getPerfiles, getPerfilById, updatePerfil, } = require('../services/perfil.service');
 const fileUpload = require('../helpers/fileUpload');
 const { getName } = require('../helpers/getNameFromUrl');
@@ -67,13 +67,26 @@ router.put('/:id',
     fileUpload.single("foto"),
     async (req, res, next) => {
     try {
-        const { sub } = req.user;
-        const { id } = req.params;
-        const body = req.body;
-        const file = req.file?.location || 'empty';
-        const fileName = getName(req.file?.location);
-        const perfil = await updatePerfil(id, body, sub, file, fileName);
-        res.status(201).json(perfil); 
+        let objetoReparado = JSON.stringify(req.body);
+        objetoReparado = JSON.parse(objetoReparado);
+
+        if (objetoReparado.numCelular && objetoReparado.dni) {
+            objetoReparado.numCelular = parseInt(objetoReparado.numCelular);
+            objetoReparado.dni = parseInt(objetoReparado.dni);
+        }
+
+        const resultVal = validatorRegister(updateProfileSchema, objetoReparado);
+
+        if (resultVal == true) {
+            const { sub } = req.user;
+            const { id } = req.params;
+            const file = req.file?.location || 'empty';
+            const fileName = getName(req.file?.location);
+            const perfil = await updatePerfil(id, objetoReparado, sub, file, fileName);
+            res.status(201).json(perfil); 
+        } else {
+            throw boom.badRequest(resultVal);
+        }
     } catch (err) {
         next(err);
     }

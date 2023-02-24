@@ -1,6 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const { USER_TABLE } = require('./user.model');
 const { OCUPACION_TABLE } = require('./ocupacion.model');
+const { DISTRITO_TABLE } = require('../models/distrito.model');
 
 const PERFIL_TABLE = 'perfil';
 
@@ -64,6 +65,17 @@ const PerfilSchema = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
     },
+    distritoId: {
+        field: 'distrito_id',
+        allowNull: true,
+        type: DataTypes.INTEGER,
+        references: {
+            model: DISTRITO_TABLE,
+            key: 'id_distrito'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+    },
     userId: {
         field: 'user_id',
         allowNull: true,
@@ -88,6 +100,11 @@ class Perfil extends Model {
         this.belongsTo(models.Ocupacion, {
             as: 'ocupacion',
             foreignKey: 'ocupacionId'
+        });
+
+        this.belongsTo(models.Distrito, {
+            as: 'distrito',
+            foreignKey: 'distritoId'
         });
     };
 
