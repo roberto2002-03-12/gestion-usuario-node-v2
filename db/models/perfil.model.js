@@ -14,11 +14,11 @@ const PerfilSchema = {
     },
     nombre: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(65),
     },
     apellido: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(65),
     },
     numCelular: {
         field: 'num_celular',
@@ -34,6 +34,7 @@ const PerfilSchema = {
         type: DataTypes.STRING
     },
     fotoNombre: {
+        field: 'foto_nombre',
         allowNull: true,
         type: DataTypes.STRING
     },
@@ -46,13 +47,9 @@ const PerfilSchema = {
         allowNull: false,
         type: DataTypes.STRING(1)
     },
-    ciudad: {
-        allowNull: false,
-        type: DataTypes.STRING
-    },
     direccion: {
         allowNull: true,
-        type: DataTypes.STRING
+        type: DataTypes.STRING(85)
     },
     ocupacionId: {
         field: 'ocupacion_id',

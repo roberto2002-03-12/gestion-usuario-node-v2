@@ -7,6 +7,7 @@ const { DepartamentoSchema, Departamento } = require('./departamento.model');
 const { ProvinciaSchema, Provincia } = require('./provincia.model');
 const { DistritoSchema, Distrito } = require('./distrito.model');
 const { OcupacionSchema, Ocupacion } = require('./ocupacion.model');
+const { TokenInvalidoSchema, TokenInvalido } = require('./token-invalido');
 
 function setupModels(sequelize) {
     Departamento.init(DepartamentoSchema, Departamento.config(sequelize));
@@ -18,6 +19,7 @@ function setupModels(sequelize) {
     Rol.init(RolSchema, Rol.config(sequelize));
     UserRol.init(UserRolSchema, UserRol.config(sequelize));
     Codigo.init(CodigoSchema, Codigo.config(sequelize));
+    TokenInvalido.init(TokenInvalidoSchema, TokenInvalido.config(sequelize));
 
     Departamento.associate(sequelize.models);
     Provincia.associate(sequelize.models);
@@ -28,6 +30,7 @@ function setupModels(sequelize) {
     Rol.associate(sequelize.models);
     UserRol.associate(sequelize.models);
     Codigo.associate(sequelize.models);
+    TokenInvalido.associate(sequelize.models);
 }
 
 module.exports = setupModels;
