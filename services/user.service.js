@@ -1,7 +1,9 @@
 const boom = require('@hapi/boom');
 const bcrypt = require('bcrypt');
 const { models } = require('../libs/sequelize');
-const { Rol } = require('../db/models/rol.model')
+const { Rol } = require('../db/models/rol.model');
+const { Perfil } = require('../db/models/perfil.model');
+const { Distrito } = require('../db/models/distrito.model');
 
 const getUserById = async (id) => {
     const user = await models.User.findByPk(id, {
@@ -25,7 +27,8 @@ const getUserById = async (id) => {
 }
 
 const getUserByEmail = async (email) => {
-    const user = await models.User.findOne({ 
+    console.log(email)
+    const user = await models.User.findOne({
         where: {email: email},
         include: [{
             model: Rol,
@@ -33,12 +36,18 @@ const getUserByEmail = async (email) => {
             attributes: {
                 exclude: ['idrol','createdAt']
             }
-        }, 'perfil'],
+        },
+        {
+            model: Perfil,
+            as: 'perfil',
+            include: [{model: Distrito, as: 'distrito'}]
+        }
+        ],
         attributes: {
-            exclude: ['recoveryToken','createdAt']
+            exclude: ['recoveryToken','createdAt', 'tokenLogged']
         }
     });
-    
+
     return user;
 };
 

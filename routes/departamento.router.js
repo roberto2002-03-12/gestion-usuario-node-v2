@@ -6,12 +6,14 @@ const { checkRole } = require('../middlewares/auth.handler');
 const { createDepartamentoSchema, updateDepartamentoSchema,
         selectDepartamentoSchema, searchDepartamentoSchema } = require('../schemas/departamento.schema');
 const validationHandler = require('../middlewares/validator.handler');
+const { checkTokenBlack } = require('../middlewares/token-valid.handler');
 
 const router = express.Router();
 
 router.post('/',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin', 'manager'),
+    checkTokenBlack(),
     validationHandler(createDepartamentoSchema, 'body'),
     async (req, res, next) => {
         try {
@@ -39,6 +41,7 @@ router.get('/',
 router.patch('/:id',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin', 'manager'),
+    checkTokenBlack(),
     validationHandler(selectDepartamentoSchema, 'params'),
     validationHandler(updateDepartamentoSchema, 'body'),
     async (req, res, next) => {
@@ -56,6 +59,7 @@ router.patch('/:id',
 router.delete('/:id',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin', 'manager'),
+    checkTokenBlack(),
     validationHandler(selectDepartamentoSchema, 'params'),
     async (req, res, next) => {
         try {

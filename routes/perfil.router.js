@@ -9,12 +9,14 @@ const { getName } = require('../helpers/getNameFromUrl');
 const validatorRegister = require('../helpers/validatorRegister');
 const boom = require('@hapi/boom');
 const { queryProfileSchema } = require('../schemas/query.schema');
+const { checkTokenBlack } = require('../middlewares/token-valid.handler');
 
 const router = express.Router();
 
 router.get('/',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin', 'manager'),
+    checkTokenBlack(),
     validatorHandler(queryProfileSchema, 'query'),
     async (req, res, next) => {
     try {

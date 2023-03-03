@@ -2,6 +2,7 @@ const Joi = require('joi');
 
 const idProvincia = Joi.number();
 const nombreProvincia = Joi.string().min(3).max(45);
+const nombreDepartamento = Joi.string().min(3).max(45);
 const departamentoId = Joi.number();
 
 const crearProvinciaSchema = Joi.object({
@@ -19,7 +20,8 @@ const seleccionarProvinciaSchema = Joi.object({
 });
 
 const buscarProvinciaSchema = Joi.object({
-    nombre_departamento: nombreProvincia.optional()
+    nombre_provincia: nombreProvincia.optional(),
+    nombre_departamento: nombreDepartamento.optional()
 });
 
 module.exports = {

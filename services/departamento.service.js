@@ -49,11 +49,11 @@ const listarDepartamento = async (query) => {
         }],
         where: {}
     }
-
+    console.log(nombre_departamento);
     if (nombre_departamento) {
         opcion.where = {
             nombreDepartamento: {
-                [Op.like]: '%' + query + '%'
+                [Op.like]: '%' + nombre_departamento + '%'
             }
         }
     }

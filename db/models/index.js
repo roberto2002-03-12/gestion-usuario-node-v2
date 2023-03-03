@@ -13,8 +13,8 @@ function setupModels(sequelize) {
     Departamento.init(DepartamentoSchema, Departamento.config(sequelize));
     Provincia.init(ProvinciaSchema, Provincia.config(sequelize));
     Distrito.init(DistritoSchema, Distrito.config(sequelize));
-    User.init(UserSchema, User.config(sequelize));
     Ocupacion.init(OcupacionSchema, Ocupacion.config(sequelize));
+    User.init(UserSchema, User.config(sequelize));
     Perfil.init(PerfilSchema, Perfil.config(sequelize));
     Rol.init(RolSchema, Rol.config(sequelize));
     UserRol.init(UserRolSchema, UserRol.config(sequelize));
@@ -24,8 +24,8 @@ function setupModels(sequelize) {
     Departamento.associate(sequelize.models);
     Provincia.associate(sequelize.models);
     Distrito.associate(sequelize.models);
-    User.associate(sequelize.models);
     Ocupacion.associate(sequelize.models);
+    User.associate(sequelize.models);
     Perfil.associate(sequelize.models);
     Rol.associate(sequelize.models);
     UserRol.associate(sequelize.models);

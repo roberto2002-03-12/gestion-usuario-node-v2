@@ -1,6 +1,7 @@
 const boom = require('@hapi/boom');
 const { models } = require('../libs/sequelize');
 const { getUserById } = require('./user.service');
+const { Sequelize, Op } = require('sequelize');
 
 const generarCodigo = async (idtoken) => {
     const usuario = await getUserById(idtoken);
@@ -33,8 +34,58 @@ const utilizarCodigo = async (clave, email) => {
     return respuesta;
 };
 
-const listarCodigos = async () => {
-    const codigos = await models.Codigo.findAll();
+const listarCodigos = async (query) => {
+    const { created_by, created_at, used_by, used_at, 
+            active, limit, offset } = query || {};
+
+    const opciones = {
+        where: {},
+        limit: 20,
+        offset: 0
+    };
+
+    if (created_by) {
+        opciones.where = { 
+            createdBy: { 
+                [Op.like]: '%' + created_by + '%' 
+            } 
+        };
+    };
+    
+    if (created_at) {
+        opciones.where = Sequelize.and(opciones.where, {
+            createdAt: {
+                [Op.gte]: created_at
+            }
+        });
+    };
+
+    if (used_by) {
+        opciones.where = Sequelize.and(opciones.where, {
+            usedBy: {
+                [Op.like]: '%' + used_by + '%'
+            }
+        });
+    };
+
+    if (used_at) {
+        opciones.where = Sequelize.and(opciones.where, {
+            usedAt: {
+                [Op.gte]: used_at
+            }
+        });
+    };
+
+    if (active) {
+        opciones.where = Sequelize.and(opciones.where, {
+            active: active
+        });
+    };
+
+    if (limit) opciones.limit = parseInt(limit);
+    if (offset) opciones.offset = parseInt(offset);
+
+    const codigos = await models.Codigo.findAll(opciones);
     return codigos;
 };
 

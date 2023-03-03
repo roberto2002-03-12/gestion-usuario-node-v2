@@ -14,6 +14,10 @@ const TokenInvalidoSchema = {
         allowNull: false,
         type: DataTypes.STRING
     },
+    bannedTo: {
+        allowNull: false,
+        type: DataTypes.STRING(70)
+    },
     addedAt: {
         field: 'added_at',
         allowNull: false,

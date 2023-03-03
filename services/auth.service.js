@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { config } = require('../config/config');
 const nodemailer = require('nodemailer');
 const { getRoles } = require('../helpers/getRoles');
+const { models } = require('../libs/sequelize');
 
 const getUser = async (email, password) => {
     const user = await getUserByEmail(email);
@@ -22,15 +23,26 @@ const getUser = async (email, password) => {
     return user;
 };
 
-const signToken = (user) => {
-    const rol = user?.rol[0]?.dataValues?.rolName
-
+const signToken = async (user) => {
+    //const rol = user?.rol[0]?.dataValues?.rolName
+    const rol = [];
+    
+    for (i = 0; i < user?.rol.length; i++) {
+        rol.push(user?.rol[i]?.dataValues?.rolName);
+    };
+    
     const payload = {
         sub: user.iduser,
         role: rol
     };
 
     const token = jwt.sign(payload, config.jwtSecret, {expiresIn: '4h'});
+
+    const userFound = await models.User.findByPk(user.iduser);
+
+    await userFound.update({
+        tokenLogged: token
+    });
 
     return {
         user,
@@ -126,7 +138,11 @@ const renewToken = async (sub) => {
         role: roles
     };
 
-    const token = jwt.sign(payload, config.jwtSecret, {expiresIn: '20min'});
+    const token = jwt.sign(payload, config.jwtSecret, {expiresIn: '1h'});
+
+    user.update({
+        tokenLogged: token
+    });
 
     return {
         user,

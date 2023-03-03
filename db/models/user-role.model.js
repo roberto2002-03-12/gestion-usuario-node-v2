@@ -31,6 +31,16 @@ const UserRolSchema = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
     },
+    assignedBy: {
+        type: DataTypes.STRING(65),
+        field: 'assigned_by',
+        allowNull: false
+    },
+    assignedTo: {
+        type: DataTypes.STRING(65),
+        field: 'assigned_to',
+        allowNull: false
+    },
     createdAt: {
         allowNull: false,
         field: 'created_at',

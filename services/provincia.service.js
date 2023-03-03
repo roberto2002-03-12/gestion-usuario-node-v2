@@ -2,6 +2,7 @@ const boom = require('@hapi/boom');
 const { models } = require('../libs/sequelize');
 const { Op } = require('sequelize');
 const { Distrito } = require('../db/models/distrito.model');
+const { Departamento } = require('../db/models/departamento.model');
 
 const crearProvincia = async (obj) => {
     const provincia = await models.Provincia.create(obj);
@@ -20,13 +21,20 @@ const cambiarProvincia = async (id, obj) => {
 };
 
 const listarProvincia = async (query) => {
-    const { nombre_provincia } = query || {};
+    const { nombre_provincia, nombre_departamento } = query || {};
 
     const opcion = {
-        include: [{
-            model: Distrito,
-            as: 'distritos'
-        }],
+        include: [
+            {
+                model: Departamento,
+                as: 'departamento',
+                where: {}
+            },
+            {
+                model: Distrito,
+                as: 'distritos'
+            }
+        ],
         where: {}
     };
 
@@ -37,6 +45,8 @@ const listarProvincia = async (query) => {
             }
         };
     };
+
+    if (nombre_departamento) opcion.include[0].where = { nombreDepartamento: nombre_departamento }
 
     const provincias = await models.Provincia.findAll(opcion);
 

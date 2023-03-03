@@ -4,6 +4,7 @@ const { checkRole } = require('../middlewares/auth.handler');
 const validationHandler = require('../middlewares/validator.handler');
 const { crearOcupacion, listarOcupacion, eliminarOcupacion, cambiarOcupacion, seleccionarOcupacion } = require('../services/ocupacion.service');
 const { crearOcupacionSchema, buscarOcupacionSchema } = require('../schemas/ocupacion.schema');
+const { checkTokenBlack } = require('../middlewares/token-valid.handler');
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ router.get('/',
 );
 
 router.get('/:id',
-    validationHandler(buscarOcupacionSchema),
+    validationHandler(buscarOcupacionSchema, 'params'),
     async (req, res, next) => {
         try {
             const { id } = req.params;
@@ -34,6 +35,7 @@ router.get('/:id',
 router.patch('/:id',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin', 'manager'),
+    checkTokenBlack(),
     validationHandler(buscarOcupacionSchema, 'params'),
     validationHandler(crearOcupacionSchema, 'body'),
     async (req, res, next) => {
@@ -51,6 +53,7 @@ router.patch('/:id',
 router.post('/',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin', 'manager'),
+    checkTokenBlack(),
     validationHandler(crearOcupacionSchema, 'body'),
     async (req, res, next) =>{
         try {
@@ -66,6 +69,7 @@ router.post('/',
 router.delete('/:id',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin'),
+    checkTokenBlack(),
     validationHandler(buscarOcupacionSchema, 'params'),
     async (req, res, next) => {
         try {

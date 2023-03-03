@@ -8,6 +8,7 @@ const departamentoRouter = require('./departamento.router');
 const provinciaRouter = require('./provincia.router');
 const distritoRouter = require('./distrito.router');
 const ocupacionRouter = require('./ocupacion.router');
+const tokenRouter = require('./tokens.router');
 
 function routerApi(app) {
     const router = express.Router();
@@ -22,6 +23,7 @@ function routerApi(app) {
     router.use('/provincia', provinciaRouter);
     router.use('/distrito', distritoRouter);
     router.use('/ocupacion', ocupacionRouter);
+    router.use('/token', tokenRouter);
 };
 
 module.exports = routerApi;

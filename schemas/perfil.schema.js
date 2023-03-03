@@ -11,7 +11,7 @@ const direccion = Joi.string();
 const distritoId = Joi.number();
 const ocupacionId = Joi.number();
 const codigo = Joi.string().uuid();
-const dni = Joi.number().min(8);
+const dni = Joi.number();
 
 const email = Joi.string().email();
 const password = Joi.string().min(8);

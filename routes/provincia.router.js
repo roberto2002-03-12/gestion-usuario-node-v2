@@ -4,12 +4,14 @@ const { checkRole } = require('../middlewares/auth.handler');
 const validationHandler = require('../middlewares/validator.handler');
 const { crearProvincia, listarProvincia, eliminarProvincia, seleccionarProvincia, cambiarProvincia } = require('../services/provincia.service');
 const { crearProvinciaSchema, seleccionarProvinciaSchema, buscarProvinciaSchema, cambiarProvinciaSchema } = require('../schemas/provincia.schema');
+const { checkTokenBlack } = require('../middlewares/token-valid.handler');
 
 const router = express.Router();
 
 router.post('/', 
     passport.authenticate('jwt', {session: false}),
     checkRole('admin', 'manager'),
+    checkTokenBlack(),
     validationHandler(crearProvinciaSchema, 'body'),
     async (req, res, next) => {
         try {
@@ -50,6 +52,7 @@ router.get('/:id',
 router.patch('/:id',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin', 'manager'),
+    checkTokenBlack(),
     validationHandler(seleccionarProvinciaSchema, 'params'),
     validationHandler(cambiarProvinciaSchema, 'body'),
     async (req, res, next) => {
@@ -67,6 +70,7 @@ router.patch('/:id',
 router.delete('/:id',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin'),
+    checkTokenBlack(),
     validationHandler(seleccionarProvinciaSchema, 'params'),
     async (req, res, next) => {
         try {

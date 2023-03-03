@@ -4,6 +4,7 @@ const { checkRole } = require('../middlewares/auth.handler');
 const validationHandler = require('../middlewares/validator.handler');
 const { crearDistritoSchema, buscarDistritoSchema, seleccionarDistritoSchema, cambiarDistritoSchema } = require('../schemas/distrito.schema');
 const { crearDistrito, listarDistritos, cambiarDistrito, eliminarDistrito, seleccionarDistrito } = require('../services/distrito.service');
+const { checkTokenBlack } = require('../middlewares/token-valid.handler');
 
 const router = express.Router();
 
@@ -35,6 +36,7 @@ router.get('/:id',
 router.post('/',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin', 'manager'),
+    checkTokenBlack(),
     validationHandler(crearDistritoSchema, 'body'),
     async (req, res, next) => {
         try {
@@ -50,6 +52,7 @@ router.post('/',
 router.patch('/:id',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin', 'manager'),
+    checkTokenBlack(),
     validationHandler(seleccionarDistritoSchema, 'params'),
     validationHandler(cambiarDistritoSchema, 'body'),
     async (req, res, next) => {
@@ -67,6 +70,7 @@ router.patch('/:id',
 router.delete('/:id',
     passport.authenticate('jwt', {session: false}),
     checkRole('admin'),
+    checkTokenBlack(),
     validationHandler(seleccionarDistritoSchema, 'params'),
     async (req, res, next) => {
         try {

@@ -5,23 +5,20 @@ const { Departamento } = require('../db/models/departamento.model');
 const boom = require('@hapi/boom');
 
 const listarDistritos = async (query) => {
-    const { nombre_distrito } = query || {};
+    const { nombre_distrito, nombre_provincia } = query || {};
     
     const opcion = {
         include: [{
             model: Provincia,
-            as: 'provincia'
+            as: 'provincia',
+            where: {}
         }],
         where: {}
     };
 
-    if (nombre_distrito) {
-        opcion.where = {
-            nombreDistrito: {
-                [Op.like]: '%' + nombre_distrito + '%'
-            }
-        };
-    };
+    if (nombre_distrito) opcion.where = { nombreDistrito: { [Op.like]: '%' + nombre_distrito + '%'} };
+
+    if (nombre_provincia) opcion.include[0].where = { nombreProvincia: nombre_provincia };
 
     const distritos = await models.Distrito.findAll(opcion);
 

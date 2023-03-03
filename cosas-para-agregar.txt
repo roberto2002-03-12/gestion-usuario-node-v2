@@ -1,0 +1,15 @@
+1: Arreglar fuga de seguridad
+Estado: en idea, aún no desarrollado ni avanzado
+Descripción: El tema es el siguiente, si yo me logueo como admin, me van
+a dar un token con dicho rol, suponiendo tengo rol admin que me da poder
+absoluto de hacer lo que quiera, pero otro admin me quita ese rol, sin embargo,
+yo me loguie y lo hice dos veces, por lo tanto el último token estará inservible
+pero con el que inicie no, dandome la oportunidad de seguir haciendo lo que quiera
+
+posibles soluciones
+- agregar una tabla registro de token, donde guardará todos los tokens y de ahí yo puedo
+desactivarlo
+- agregar la columna "logged" y que sea tipo false o true, y que dicha columna cambie de valor
+luego de 4 horas, la tarea sería investigar cómo lo cambio de true a false después de 4h.
+
+la que tendrá mejor perfomance es la segunda posible solución, ¿Pero hay posibilidad de hacerlo?

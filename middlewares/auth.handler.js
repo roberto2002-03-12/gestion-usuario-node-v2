@@ -18,11 +18,12 @@ function checkAdminRole(req, res, next) {
 function checkRole(...roles) {
     return (req, res, next) => {
         const user = req.user;
-        if(roles.includes(user.role)) {
-            next();
-        } else {
-            next(boom.unauthorized('No tienes permiso'));
+        for (i = 0; i < user.role.length; i++) {
+            if (roles.includes(user.role[i])) {
+                return next();
+            }
         }
+        next(boom.unauthorized('No tienes permisos'));
     }
 };
 

@@ -4,6 +4,7 @@ const validatorHandler = require('../middlewares/validator.handler');
 const { getUserById, activateUser, changePassword } = require('../services/user.service');
 const { getUserSchema, activeUserSchema, changePasswordSchema } = require('../schemas/user.schema');
 const { checkRole } = require('../middlewares/auth.handler');
+const { checkTokenBlack } = require('../middlewares/token-valid.handler');
 
 const router = express.Router();
 //con session false evitas que guarde el usuario en la sesion
@@ -24,7 +25,8 @@ router.get('/:id',
 router.patch('/desactivar-usuario', 
     passport.authenticate('jwt', {session: false}),
     checkRole('admin'),
-    validatorHandler(activeUserSchema, 'body'), 
+    validatorHandler(activeUserSchema, 'body'),
+    checkTokenBlack(),
     async (req, res, next) => {
     try {
         const { id, active } = req.body;

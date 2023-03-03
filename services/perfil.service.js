@@ -5,58 +5,88 @@ const bcrypt = require('bcrypt');
 const { utilizarCodigo } = require('./codigo.service');
 const { getUserByEmail } = require('./user.service');
 const { User } = require('../db/models/user.model');
+const { Ocupacion } = require('../db/models/ocupacion.model');
+const { Distrito } = require('../db/models/distrito.model');
 const aws = require('aws-sdk');
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
+const sequelize = require('../libs/sequelize');
 const s3 = new aws.S3();
 
 const crearPerfil = async (data, file, fileName) => {
-    const usuario = await getUserByEmail(data.user.email);
+    let transaction;
 
-    if (usuario !== null) throw boom.unauthorized('Email ya registrado');
+    try {
+        transaction = await sequelize.transaction();
 
-    await utilizarCodigo(data.codigo, data.user.email);
+        const usuario = await getUserByEmail(data.user.email);
 
-    const hash = await bcrypt.hash(data.user.password, 10);
+        if (usuario !== null) throw boom.unauthorized('Email ya registrado');
+    
+        const hash = await bcrypt.hash(data.user.password, 10);
+    
+        const finalData = {
+            ...data,
+            foto: file,
+            fotoNombre: fileName,
+            user: {
+                email: data.user.email,
+                password: hash,
+                active: 1,
+                tokenLogged: 'aún no logueado'
+            }
+        };
 
-    //modificar los datos
-    const finalData = {
-        ...data,
-        foto: file,
-        fotoNombre: fileName,
-        user: {
-            email: data.user.email,
-            password: hash,
-            active: 1
+        const perfil = await models.Perfil.create(finalData, {
+            include: ['user'],
+            transaction
+        });
+
+        //después de haber creado el usuario utilizar el código
+        await utilizarCodigo(data.codigo, data.user.email);
+    
+        await transaction.commit();
+
+        delete perfil.dataValues.user.dataValues.password;
+        
+        return perfil;
+    } catch(err) {
+        if (transaction) {
+            await transaction.rollback();
         }
-    };
-    //crear perfil y user al mismo tiempo
-    const perfil = await models.Perfil.create(finalData, {
-        include: ['user']
-    });
-
-    delete perfil.dataValues.user.dataValues.password;
-    return perfil;
+        throw err;
+    }
 };
 
 const getPerfiles = async (query) => {
     const opciones = {
+        //subQuery: false,
         include: [
             {
                 model: User,
                 as: 'user',
                 attributes: { //excluir contraseña para evitar usar map o forEach que hace mayor carga de proceso que una petición mysql
-                    exclude: ['password', 'recoveryToken', 'token']
+                    exclude: ['password', 'recoveryToken', 'token', 'tokenLogged']
                 },
+                where: {}
+            },
+            {
+                model: Ocupacion,
+                as: 'ocupacion',
+                where: {}
+            },
+            {
+                model: Distrito,
+                as: 'distrito',
                 where: {}
             }
         ],
         where: {},
-        limit: 5,
+        limit: 20,
         offset: 0
     }
 
-    const { limit, offset, nombre, correo, sexo, ocupacion, fecha_registro, orden } = query || {};
+    const { limit, offset, nombre, correo, sexo, ocupacion, distrito, fecha_registro, orden } = query || {};
 
     if (nombre) {
         opciones.where = Sequelize.where(Sequelize.fn('concat', Sequelize.col('nombre'), ' ', Sequelize.col('apellido')), {
@@ -75,26 +105,41 @@ const getPerfiles = async (query) => {
     if (fecha_registro) {
         let fecha = new Date(fecha_registro);
         opciones.include[0].where = Sequelize.and(opciones.include[0].where, { createdAt: {[Op.gte]: fecha} });
-    }
+    };
 
     if (orden) {
-        opciones.order = [[{model: User, as: 'user'},'createdAt', orden == 'mayor' ? 'ASC' : 'DESC']];
-    }
+        opciones.order = [
+            [
+                {model: User, as: 'user'},
+                'createdAt', 
+                orden == 'mayor' ? 'ASC' : 'DESC'
+            ]
+        ];
+    };
 
     if (sexo) {
         opciones.where = Sequelize.and(opciones.where, { sexo: sexo });
     };
 
     if (ocupacion) {
-        opciones.where = Sequelize.and(opciones.where, { ocupacion: ocupacion });
+        opciones.include[1].where = { 
+            nombreOcupacion: ocupacion
+        };
     };
 
-    if (limit && offset) {
+    if (distrito) {
+        opciones.include[2].where = {
+            nombreDistrito: distrito
+        };
+    };
+
+    if (limit) {
         opciones.limit = parseInt(limit);
-        opciones.offset = parseInt(offset);
     };
 
-    console.log(opciones);
+    if (offset) {
+        opciones.offset = parseInt(offset);
+    }
 
     const perfiles = await models.Perfil.findAll(opciones);
     return perfiles;

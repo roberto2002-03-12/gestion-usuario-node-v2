@@ -36,7 +36,7 @@ class Distrito extends Model {
             foreignKey: 'provinciaId'
         });
 
-        this.hasMany(models.User, {
+        this.hasMany(models.Perfil, {
             as: 'distrito',
             foreignKey: 'distritoId'
         });
