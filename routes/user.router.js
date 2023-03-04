@@ -29,8 +29,9 @@ router.patch('/desactivar-usuario',
     checkTokenBlack(),
     async (req, res, next) => {
     try {
+        const { sub } = req.user;
         const { id, active } = req.body;
-        const respuesta = await activateUser(id, active);
+        const respuesta = await activateUser(id, active, sub);
         res.status(201).json(respuesta);
     } catch(err) {
         next(err);

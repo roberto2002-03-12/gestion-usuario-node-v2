@@ -4,6 +4,7 @@ const { models } = require('../libs/sequelize');
 const { Rol } = require('../db/models/rol.model');
 const { Perfil } = require('../db/models/perfil.model');
 const { Distrito } = require('../db/models/distrito.model');
+const { agregarToken } = require('../services/tokens.service');
 
 const getUserById = async (id) => {
     const user = await models.User.findByPk(id, {
@@ -57,8 +58,11 @@ const updateUser = async (id, cambios) => {
     return respuesta;
 };
 
-const activateUser = async (id, estado) => {
+const activateUser = async (id, estado, sub) => {
     const user = await models.User.findByPk(id);
+
+    if (estado === 0) await agregarToken(id, sub);
+
     await user.update({ active: estado })
     return 'Actualizado';
 };

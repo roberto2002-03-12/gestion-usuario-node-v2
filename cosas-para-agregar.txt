@@ -13,3 +13,8 @@ desactivarlo
 luego de 4 horas, la tarea sería investigar cómo lo cambio de true a false después de 4h.
 
 la que tendrá mejor perfomance es la segunda posible solución, ¿Pero hay posibilidad de hacerlo?
+
+Mejor solución: agregar una tabla de logins, en la cual agregará la fecha de registro y el tiempo
+de caducidad, que debe ser 4 horas, es decir si inicio sesión a las 12 PM entonces se va poder loguear
+de nuevo a las 16 PM, esto para evitar el problema de seguridad, es el que tiene mejor perfomance y menos
+complejidad.
