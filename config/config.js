@@ -11,8 +11,8 @@ const config = {
     jwtSecret: process.env.JWT_SECRET,
     emailRecype: process.env.EMAIL_RECYPE,
     passRecype: process.env.PASS_RECYPE,
-    awsAccessKey:  'n/YVVjOgKKwP6yreuWBEaydT497rHRzJerEbrPii',
-    awsAccessId:  'AKIAUUBHZNS5T4T675NI',
+    awsAccessKey:  '',
+    awsAccessId:  '',
     awsBucket:  'ucvcid-test-1',
     awsRegion:  'sa-east-1'
 };
